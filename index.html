@@ -36,6 +36,8 @@
   .card h2{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin:0 0 10px}
   .row{display:flex;justify-content:space-between;gap:12px;font-size:13.5px;padding:6px 0;border-bottom:1px dashed var(--line)}
   .row:last-child{border:0}.row span{color:var(--muted)}.row b{text-align:right;font-weight:600}
+  .crm{display:flex;justify-content:center;margin-top:12px;background:var(--brand);color:#fff;text-decoration:none;font-weight:600;border-radius:999px;padding:11px 16px}
+  .crm:hover{background:var(--brand-dk)}
   .note{font-size:12px;color:var(--muted);margin-top:12px}
   @media(max-width:720px){.wrap{grid-template-columns:1fr}.phone{height:74vh}.logo{width:96px;height:96px}}
 </style>
@@ -59,6 +61,7 @@
       <div class="row"><span>Preferencia de cita</span><b id="l-cita">—</b></div>
       <div class="row"><span>Estado</span><b id="l-estado">Conversando</b></div>
     </div>
+    <a class="crm" href="crm.html" target="_blank" rel="noopener">Ver estos datos en el CRM →</a>
     <div class="note">Demostración local con datos de ejemplo. Precios, horario y dirección se reemplazan por los reales de Maxillaria.</div>
   </div>
 </div>
@@ -83,11 +86,29 @@ const N = {
 // ==========================================
 const $ = id => document.getElementById(id), msgs = $("msgs");
 const lead = {nombre:"", interes:"", cita:""}; let paso = null;
+// ===== Conexión con el CRM (MVP: mismo navegador) =====
+const CRM_KEY = "maxillaria_crm_leads", sid = "d"+Date.now().toString(36), chatLog = [];
+const telDemo = "Demo · +00 9" + String(Math.floor(Math.random()*1e8)).padStart(8,"0").replace(/(\d{2})(\d{3})(\d{3})/,"$1 $2 $3");
+const ORDEN = ["nuevo","interesado","por_confirmar","agendado","atendido"];
+function guardarCRM(){
+  if(!chatLog.some(m=>m.who==="me")) return;
+  try{
+    let ls = JSON.parse(localStorage.getItem(CRM_KEY)||"null"); if(!Array.isArray(ls)) ls = [];
+        const etapa = lead.nombre&&lead.cita ? "por_confirmar" : lead.interes ? "interesado" : "nuevo";
+    let l = ls.find(x=>x.id===sid);
+    if(!l){ l = nuevoLead(); ls.push(l); }
+    if(ORDEN.indexOf(etapa) > ORDEN.indexOf(l.etapa)){ l.etapa = etapa; l.historial.push({ts:Date.now(), t:"El asistente lo pasó a "+({interesado:"Interesado",por_confirmar:"Por confirmar"})[etapa]}); }
+    Object.assign(l, {nombre:lead.nombre||l.nombre, interes:lead.interes||l.interes, cita:lead.cita||l.cita, chat:chatLog.slice(), actualizado:Date.now()});
+    localStorage.setItem(CRM_KEY, JSON.stringify(ls));
+  }catch(e){}
+}
+function nuevoLead(){ return {id:sid, nombre:lead.nombre, telefono:telDemo, interes:lead.interes, cita:lead.cita, etapa:"nuevo", origen:"WhatsApp (asistente demo)", creado:Date.now(), actualizado:Date.now(), notas:"", chat:chatLog.slice(), historial:[{ts:Date.now(), t:"Llegó por WhatsApp"}]}; }
+// ======================================================
 const clave = {
   "diseño de sonrisa":/dise[ñn]o|sonrisa/, "carillas":/carilla/, "blanqueamiento":/blanque|manch|amarill/,
   "implantes":/implante/, "coronas":/corona|funda/, "prótesis":/pr[oó]tesis|puente|dentadura/, "rehabilitación oral":/rehabilit/
 };
-function add(t, who){ const d=document.createElement("div"); d.className="m "+who; d.textContent=t; msgs.appendChild(d); msgs.scrollTop=msgs.scrollHeight; return d; }
+function add(t, who){ if(!/typing/.test(who)) chatLog.push({who:who==="me"?"me":"bot", t, ts:Date.now()}); const d=document.createElement("div"); d.className="m "+who; d.textContent=t; msgs.appendChild(d); msgs.scrollTop=msgs.scrollHeight; return d; }
 function ficha(){ $("l-nombre").textContent=lead.nombre||"—"; $("l-interes").textContent=lead.interes||"—"; $("l-cita").textContent=lead.cita||"—";
   $("l-estado").textContent = lead.nombre&&lead.cita ? "Listo para confirmar" : lead.interes ? "Interesado" : "Conversando"; }
 function chips(list){ const c=$("chips"); c.innerHTML=""; list.forEach(t=>{ const b=document.createElement("button"); b.type="button"; b.textContent=t; b.onclick=()=>enviar(t); c.appendChild(b); }); }
@@ -121,7 +142,7 @@ function responder(txt){
 }
 function enviar(txt){ if(!txt.trim()) return; add(txt,"me"); $("i").value="";
   const ty = add(N.agente+" está escribiendo…","bot typing");
-  setTimeout(()=>{ ty.remove(); add(responder(txt),"bot"); ficha();
+  setTimeout(()=>{ ty.remove(); add(responder(txt),"bot"); ficha(); guardarCRM();
     chips(paso ? [] : lead.cita ? ["Formas de pago","Ubicación","Gracias"] : base); }, 700); }
 $("f").onsubmit = e => { e.preventDefault(); enviar($("i").value); };
 add(`Hola, soy ${N.agente}, asistente virtual de Maxillaria. ¿En qué puedo ayudarte?`,"bot"); chips(base);
