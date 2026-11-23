@@ -15,7 +15,7 @@
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.6 var(--sans);-webkit-font-smoothing:antialiased}
 a{color:inherit}
-.wrap{max-width:1080px;margin:0 auto;padding:0 var(--g)}
+.wrap{max-width:1200px;margin:0 auto;padding:0 var(--g)}
 .amb{position:fixed;inset:0;pointer-events:none;z-index:-1;background:radial-gradient(600px 400px at 85% 10%,rgba(200,22,42,.045),transparent 70%),radial-gradient(500px 400px at 5% 60%,rgba(93,109,124,.05),transparent 70%)}
 /* nav */
 nav{position:sticky;top:0;z-index:10;background:rgba(251,251,250,.85);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
@@ -43,6 +43,12 @@ h1 em,h2 em{font-style:italic;color:var(--red)}
 .cta{display:flex;flex-wrap:wrap;gap:12px}
 .meta{display:flex;flex-wrap:wrap;gap:8px 28px;margin-top:48px;font:400 13px/1.4 var(--mono);color:var(--muted)}
 .meta span::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--red);margin-right:8px;vertical-align:middle}
+.hgrid{display:grid;grid-template-columns:1.35fr 1fr;gap:64px;align-items:center}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:36px;display:flex;flex-direction:column;gap:22px}
+.panel .lg{width:120px;height:120px;border-radius:50%;border:1px solid var(--line);background:#fff var(--logo) no-repeat 64% 75.3%/130.1% auto}
+.panel q{font:400 30px/1.15 var(--serif);letter-spacing:-.02em;quotes:none}
+.panel q i{display:block;color:var(--red)}
+.panel .row{font-size:14.5px;padding:12px 0}
 /* sections */
 section{padding:96px 0;border-top:1px solid var(--line)}
 .sh{display:flex;flex-direction:column;gap:14px;margin-bottom:48px;max-width:640px}
@@ -104,7 +110,9 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
 .rv.in{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
 /* responsive */
-@media (max-width:860px){.links{display:none}.bento{grid-template-columns:1fr}.c.big,.c.sm,.c.half{grid-column:auto}.steps,.visit{grid-template-columns:1fr}}
+@media (max-width:1023px){.hgrid{grid-template-columns:1fr}.panel{display:none}}
+@media (max-width:860px){.links{display:none}.lang{margin-left:auto}.bento{grid-template-columns:1fr 1fr}.c.big{grid-column:span 2}.c.sm,.c.half{grid-column:auto}.visit{grid-template-columns:1fr}}
+@media (max-width:640px){.bento,.steps{grid-template-columns:1fr}.c.big{grid-column:auto}}
 @media (max-width:640px){
  nav .btn{display:none}.lang{margin-left:auto}
  .hero{padding:64px 0 64px}section{padding:72px 0}.c{padding:24px}
@@ -131,7 +139,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
 </div></nav>
 
 <main id="top">
-<header class="hero"><div class="wrap">
+<header class="hero"><div class="wrap hgrid"><div>
  <span class="tag b rv" data-en="Care in Spanish and native English">Atención en español e inglés nativo</span>
  <h1 class="rv" style="--i:1" data-en="Aesthetic and restorative dentistry, <em>explained clearly</em>">Estética y rehabilitación dental, <em>explicada con claridad</em></h1>
  <p class="lead rv" style="--i:2" data-en="Smile design, veneers, implants and full rehabilitation. Our team speaks native English and walks you through every step in precise clinical terms, in the language you are most comfortable with.">Diseño de sonrisa, carillas, implantes y rehabilitación completa. Nuestro equipo habla inglés nativo y te explica cada paso con precisión técnica, en el idioma en que te sientas más cómodo.</p>
@@ -144,6 +152,16 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
   <span data-en="Clinical terms explained">Términos clínicos explicados</span>
   <span data-en="Replies 24/7 on WhatsApp">Respuesta 24/7 por WhatsApp</span>
  </div>
+ </div>
+ <aside class="panel rv" style="--i:3" aria-label="Idiomas de atención">
+  <span class="lg" role="img" aria-label="Logo de Maxillaria"></span>
+  <q>Hablamos tu idioma. <i>We speak your language.</i></q>
+  <div>
+   <div class="row"><span data-en="Consultation">Consulta</span><span>ES · EN</span></div>
+   <div class="row"><span data-en="Treatment plan">Plan de tratamiento</span><span>ES · EN</span></div>
+   <div class="row"><span data-en="WhatsApp assistant">Asistente WhatsApp</span><span>24/7</span></div>
+  </div>
+ </aside>
 </div></header>
 
 <section id="idiomas"><div class="wrap">
