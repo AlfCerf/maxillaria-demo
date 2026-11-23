@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MVP Maxillaria: web y portal clínico</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;height:100%;background:#14171a;overflow:hidden}
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform-origin:0 0}
+#stage>section{position:absolute;inset:0;width:1920px;height:1080px;display:none}
+#stage>section.on{display:flex}
+x-icon{display:inline-block;width:40px;height:40px}
+x-icon svg{width:100%;height:100%;display:block}
+.ctl{position:fixed;bottom:14px;right:16px;display:flex;gap:8px;align-items:center;font:500 13px/1 system-ui,sans-serif;color:#cfd2d6;z-index:5}
+.ctl button{all:unset;cursor:pointer;width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,.12);display:grid;place-items:center;color:#fff;font-size:18px}
+.ctl button:hover{background:rgba(255,255,255,.22)}
+:root{--red:#c8162a;--red-dk:#9e0f1f;--red-lt:#fbe7e9;--blue:#1f6c9f;--blue-lt:#e1f3fe;--green:#346538;--green-lt:#edf3ec;--slate:#6b6f74;--ink:#1f2328;--soft:#4a4f55;--paper:#f7f6f3;--white:#fbfbfa;--line:#e3e1dc}
+body{font-family:'DM Sans',Arial,sans-serif;color:var(--ink)}
+section{padding:128px;background:var(--paper);display:flex;flex-direction:column;gap:48px;box-sizing:border-box}
+section.alt{background:var(--white)}
+section.dark{background:var(--ink);color:var(--white)}
+.eyebrow{font-size:26px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--red)}
+.dark .eyebrow{color:#f3a9b1}
+h1{font-family:'Newsreader',Georgia,serif;font-size:104px;font-weight:400;line-height:1.05;letter-spacing:-2px;margin:0}
+h2{font-family:'Newsreader',Georgia,serif;font-size:72px;font-weight:400;line-height:1.08;letter-spacing:-1px;margin:0;color:var(--ink)}
+.dark h2{color:var(--white)}
+h3{font-size:36px;font-weight:700;line-height:1.2;margin:0;color:var(--ink)}
+p{font-size:30px;line-height:1.4;margin:0;color:var(--soft)}
+.dark p{color:#d6d8db}
+.head{display:flex;flex-direction:column;gap:16px}
+.row{display:flex;gap:28px}
+.card{flex:1;background:var(--white);border:2px solid var(--line);border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:14px}
+.alt .card{background:var(--paper)}
+.card .txt{font-size:28px;line-height:1.4;color:var(--soft)}
+.card .num{font-size:26px;font-weight:700;color:var(--red);letter-spacing:2px}
+.card.hl{background:var(--ink);border-color:var(--ink)}
+.card.hl h3{color:var(--white)}
+.card.hl .txt{color:#d6d8db}
+.ico{width:56px;height:56px;color:var(--red)}
+.ico.b{color:var(--blue)}
+.logo-wrap{width:200px;height:200px;border-radius:100px;overflow:hidden;background:#fdfcfb;border:2px solid var(--line)}
+.logo-wrap img{width:260px;height:250px;margin-left:-38px;margin-top:-38px}
+.foot{position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between}
+.foot p{font-size:24px;color:var(--slate)}
+.dark .foot p{color:#aeb2b7}
+.pill{font-size:24px;font-weight:700;padding:8px 18px;border-radius:999px;background:var(--red-lt);color:var(--red-dk)}
+.pill.b{background:var(--blue-lt);color:var(--blue)}
+.pill.g{background:var(--green-lt);color:var(--green)}
+.flow{display:flex;align-items:stretch}
+.step{flex:1;background:var(--white);border:2px solid var(--line);border-radius:20px;padding:28px;display:flex;flex-direction:column;gap:12px}
+.step h3{font-size:32px}
+.step .txt{font-size:25px;line-height:1.4;color:var(--soft)}
+.step.hl{background:var(--red);border-color:var(--red)}
+.step.hl h3{color:var(--white)}
+.step.hl .txt{color:var(--red-lt)}
+.arrow{width:56px;display:flex;align-items:center;justify-content:center}
+.arrow x-icon{width:32px;height:32px;color:var(--slate)}
+.list{display:flex;flex-direction:column;gap:22px}
+.li{display:flex;gap:20px;align-items:flex-start}
+.li x-icon{width:40px;height:40px;flex:none;margin-top:2px}
+.li p{font-size:30px;color:var(--ink)}
+.ok x-icon{color:#1f7a4d}
+.no x-icon{color:var(--red)}
+.url{font-size:36px;font-weight:700;color:var(--red)}
+.big{font-family:'Newsreader',Georgia,serif;font-size:88px;line-height:1;color:var(--ink)}
+.small{font-size:24px;color:var(--slate)}
+table{font-size:28px;color:var(--ink);width:100%}
+.anim{animation:rise .6s ease-out both}
+.d1{animation-delay:.12s}.d2{animation-delay:.24s}.d3{animation-delay:.36s}.d4{animation-delay:.48s}
+@keyframes rise{from{opacity:0;transform:translateY(24px)}}
+
+</style></head><body>
+<div id="stage">
+<section id="cover" class="alt" data-transition="fade" style="justify-content:center;gap:52px">
+<div class="logo-wrap anim"><img src="logo.jpg" alt="Logo de Maxillaria, estética y rehabilitación dental"></div>
+<div class="head anim d1">
+<p class="eyebrow">MVP para Maxillaria</p>
+<h1>Su web y su portal clínico, en un solo sistema</h1>
+</div>
+<p class="anim d2" style="max-width:1320px">Pacientes que la encuentran en español o inglés, citas que llegan por WhatsApp y un portal donde su equipo maneja historias, fotos y presupuestos desde el celular.</p>
+<div class="foot"><p>BetterCallAlf · WhatsApp +51 979 313 893</p><p>Noviembre 2026</p></div>
+
+</section>
+<section id="piezas">
+<div class="head"><p class="eyebrow">Qué incluye</p><h2>Tres piezas que trabajan juntas</h2></div>
+<div class="row" style="flex:1;align-items:stretch">
+<div class="card anim d1"><x-icon name="Globe" class="ico"></x-icon><h3>Web pública bilingüe</h3><p class="txt">Presenta la clínica en español e inglés nativo, con su marca, tratamientos y un botón directo a WhatsApp.</p></div>
+<div class="card anim d2"><x-icon name="Chat" class="ico"></x-icon><h3>Asistente de WhatsApp</h3><p class="txt">Maxi responde a cualquier hora, resuelve dudas y deja la solicitud de cita lista para recepción.</p></div>
+<div class="card hl anim d3"><x-icon name="Lock" class="ico" style="color:#f3a9b1"></x-icon><h3>Portal clínico privado</h3><p class="txt">Agenda, pacientes, historia con odontograma, fotos, presupuestos y auditoría. Funciona en computadora y celular.</p></div>
+</div>
+
+</section>
+<section id="web" class="alt">
+<div class="head"><p class="eyebrow">Web pública</p><h2>Su diferenciador, al frente: atención en inglés nativo y técnico</h2></div>
+<div class="row" style="flex:1;align-items:flex-start">
+<div class="list" style="flex:1.2">
+<div class="li ok anim d1"><x-icon name="Check"></x-icon><p>Botón ES / EN que traduce toda la página</p></div>
+<div class="li ok anim d2"><x-icon name="Check"></x-icon><p>Diseño minimalista con su logo y colores</p></div>
+<div class="li ok anim d3"><x-icon name="Check"></x-icon><p>Se adapta a computadora, tablet y celular</p></div>
+<div class="li ok anim d4"><x-icon name="Check"></x-icon><p>Cada botón lleva a su WhatsApp para agendar</p></div>
+</div>
+<div class="card anim d2" style="flex:1"><p class="small">Ejemplo de la sección bilingüe</p><p style="font-size:30px;color:var(--ink)">“Will the implant need a bone graft?”</p><p class="txt">“Your CBCT shows enough bone width, so we can place it without grafting.”</p><p class="url" style="font-size:28px">alfcerf.github.io/maxillaria-demo/web.html</p></div>
+</div>
+
+</section>
+<section id="flujo">
+<div class="head"><p class="eyebrow">El recorrido del paciente</p><h2>De la búsqueda a la cita, sin mensajes perdidos</h2></div>
+<div class="flow" style="flex:1;align-items:center">
+<div class="step anim"><h3>1. Encuentra</h3><p class="txt">Ve la web en su idioma</p></div>
+<div class="arrow"><x-icon name="PaperPlane"></x-icon></div>
+<div class="step anim d1"><h3>2. Escribe</h3><p class="txt">Toca WhatsApp a cualquier hora</p></div>
+<div class="arrow"><x-icon name="PaperPlane"></x-icon></div>
+<div class="step anim d2"><h3>3. Maxi atiende</h3><p class="txt">Responde y toma nombre, motivo y horario</p></div>
+<div class="arrow"><x-icon name="PaperPlane"></x-icon></div>
+<div class="step hl anim d3"><h3>4. Recepción agenda</h3><p class="txt">La solicitud aparece en el portal</p></div>
+<div class="arrow"><x-icon name="PaperPlane"></x-icon></div>
+<div class="step anim d4"><h3>5. Se atiende</h3><p class="txt">La doctora registra la atención</p></div>
+</div>
+
+</section>
+<section id="roles" class="alt">
+<div class="head"><p class="eyebrow">Portal clínico</p><h2>Cada persona ve solo lo que necesita</h2></div>
+<div class="row" style="flex:1;align-items:stretch">
+<div class="card anim d1"><p class="pill" style="align-self:flex-start">Doctora</p><h3>Acceso completo</h3><p class="txt">Todos los pacientes, historias, fotos, presupuestos y la auditoría del sistema.</p></div>
+<div class="card anim d2"><p class="pill b" style="align-self:flex-start">Profesional</p><h3>Sus pacientes</h3><p class="txt">Ve y registra la historia de los pacientes que atiende, no la de otros.</p></div>
+<div class="card anim d3"><p class="pill g" style="align-self:flex-start">Recepción</p><h3>Agenda y cobros</h3><p class="txt">Citas, contacto, presupuestos y boletas. Las notas clínicas le aparecen bloqueadas.</p></div>
+</div>
+<p class="small">Cada ingreso pide usuario personal y un código de doble factor. Todo intento bloqueado queda registrado.</p>
+
+</section>
+<section id="historia">
+<div class="head"><p class="eyebrow">Historia clínica</p><h2>Todo el caso del paciente, desde el celular</h2></div>
+<div class="row" style="flex:1;align-items:stretch">
+<div class="card anim d1"><x-icon name="Search" class="ico"></x-icon><h3>Odontograma</h3><p class="txt">Notación FDI según la NTS 188 del MINSA. Se toca la pieza y se marca caries, corona, implante o ausencia.</p></div>
+<div class="card anim d2"><x-icon name="Verified" class="ico b"></x-icon><h3>Evolución sellada</h3><p class="txt">Cada atención se cierra y ya no se edita. Las correcciones van como anexo con autor y fecha.</p></div>
+<div class="card anim d3"><x-icon name="Cloud" class="ico"></x-icon><h3>Fotos y radiografías</h3><p class="txt">Se suben desde la cámara del celular y quedan en la ficha, con fecha. En producción, cifradas.</p></div>
+</div>
+
+</section>
+<section id="gestion" class="alt">
+<div class="head"><p class="eyebrow">Gestión del día a día</p><h2>Agenda, presupuestos y boletas en el mismo lugar</h2></div>
+<div class="row" style="flex:1;align-items:stretch">
+<div class="card anim d1"><x-icon name="Clock" class="ico"></x-icon><h3>Agenda de hoy</h3><p class="txt">Citas confirmadas y por confirmar, y las solicitudes que llegan de WhatsApp listas para agendar.</p></div>
+<div class="card anim d2"><x-icon name="Book" class="ico b"></x-icon><h3>Presupuestos</h3><p class="txt">Por paciente, con envío por WhatsApp y versión en PDF en inglés para pacientes extranjeros.</p></div>
+<div class="card anim d3"><x-icon name="CheckCircle" class="ico"></x-icon><h3>Boletas SUNAT</h3><p class="txt">Emisión de comprobantes electrónicos desde la ficha, mediante un facturador autorizado.</p></div>
+</div>
+
+</section>
+<section id="seguridad" class="dark">
+<div class="head"><p class="eyebrow">Seguridad</p><h2>Datos de salud protegidos como exige la ley</h2></div>
+<div class="row" style="flex:1;align-items:flex-start">
+<div class="list" style="flex:1">
+<div class="li anim d1"><x-icon name="Key" style="color:#f3a9b1"></x-icon><p style="color:#fbfbfa">Usuario personal y doble factor en cada ingreso</p></div>
+<div class="li anim d2"><x-icon name="Lock" style="color:#f3a9b1"></x-icon><p style="color:#fbfbfa">Base de datos y fotos cifradas, en servidores con copias diarias</p></div>
+<div class="li anim d3"><x-icon name="Clock" style="color:#f3a9b1"></x-icon><p style="color:#fbfbfa">La sesión se cierra sola tras 15 minutos sin uso</p></div>
+</div>
+<div class="list" style="flex:1">
+<div class="li anim d1"><x-icon name="Activity" style="color:#f3a9b1"></x-icon><p style="color:#fbfbfa">Auditoría: quién vio o cambió qué y cuándo, imposible de alterar sin que se note</p></div>
+<div class="li anim d2"><x-icon name="Trust" style="color:#f3a9b1"></x-icon><p style="color:#fbfbfa">Nada clínico queda guardado en el celular</p></div>
+<div class="li anim d3"><x-icon name="Warning" style="color:#f3a9b1"></x-icon><p style="color:#fbfbfa">Plan de aviso a la autoridad en 48 horas ante cualquier incidente</p></div>
+</div>
+</div>
+
+</section>
+<section id="legal">
+<div class="head"><p class="eyebrow">Marco legal, con transparencia</p><h2>Qué cubre hoy el sistema y qué falta</h2></div>
+<div class="row" style="flex:1;align-items:stretch">
+<div class="card anim d1"><p class="pill g" style="align-self:flex-start">Cubre hoy</p><h3>Gestión clínica completa</h3><p class="txt">Agenda, presupuestos, boletas, fotos y registro de atenciones, cumpliendo la Ley 29733 de datos personales.</p></div>
+<div class="card anim d2"><p class="pill" style="align-self:flex-start">Aún no</p><h3>Historia clínica electrónica oficial</h3><p class="txt">La ley exige firma digital y un sistema acreditado por el MINSA. Hoy no hay uno privado acreditado verificable.</p></div>
+<div class="card anim d3"><p class="pill b" style="align-self:flex-start">Mientras tanto</p><h3>Historia oficial en papel</h3><p class="txt">Firmada y sellada como hoy. El portal la complementa y queda listo para migrar cuando exista un sistema acreditado.</p></div>
+</div>
+<p class="small">Hemos solicitado información oficial al MINSA. Todo el marco será validado por un abogado antes de lanzar.</p>
+
+</section>
+<section id="caminos" class="alt">
+<div class="head"><p class="eyebrow">Dos caminos para implementarlo</p><h2>Misma experiencia, distinta base</h2></div>
+<div class="row" style="flex:1;align-items:stretch">
+<div class="card anim d1" style="border-color:var(--red)"><p class="pill" style="align-self:flex-start">Recomendado</p><h3>A. Software dental peruano + su web y WhatsApp</h3><p class="txt">Historias en un software ya probado, conectado a su web y WhatsApp.</p><p class="big" style="font-size:72px">US$2,500</p><p class="txt">implementación · US$309 al mes · el software (US$40–85/mes) y Meta los paga la clínica directo</p></div>
+<div class="card anim d2"><p class="pill b" style="align-self:flex-start">A medida</p><h3>B. Sistema propio de Maxillaria</h3><p class="txt">Construido para la clínica, en un servidor dedicado y cifrado.</p><p class="big" style="font-size:72px">US$7,100–12,100</p><p class="txt">implementación referencial · US$165–390 al mes · se cotiza al definir alcance</p></div>
+</div>
+<p class="small">Precios en dólares, más IGV. Montos de B son referenciales.</p>
+
+</section>
+<section id="probar">
+<div class="head"><p class="eyebrow">Pruébelo usted mismo</p><h2>Tres enlaces, sin instalar nada</h2></div>
+<div class="row" style="flex:1;align-items:stretch">
+<div class="card anim d1"><x-icon name="Globe" class="ico"></x-icon><h3>Web pública</h3><p class="txt">Cambie entre ES y EN arriba a la derecha.</p><p class="url" style="font-size:26px">alfcerf.github.io/ maxillaria-demo/web.html</p></div>
+<div class="card anim d2"><x-icon name="Chat" class="ico"></x-icon><h3>Asistente Maxi</h3><p class="txt">Pregunte precios, horarios o pida una cita.</p><p class="url" style="font-size:26px">alfcerf.github.io/ maxillaria-demo/</p></div>
+<div class="card anim d3"><x-icon name="Lock" class="ico"></x-icon><h3>Portal clínico</h3><p class="txt">Entre como doctora o recepción con cualquier código de 6 dígitos.</p><p class="url" style="font-size:26px">alfcerf.github.io/ maxillaria-demo/portal.html</p></div>
+</div>
+<p class="small">Es una demostración con pacientes inventados: no guarda datos reales y se reinicia al recargar.</p>
+
+</section>
+<section id="pasos" class="dark" style="padding:128px 128px 160px">
+<div class="head"><p class="eyebrow">Próximos pasos</p><h2>Del MVP a su clínica real</h2></div>
+<div class="flow" style="flex:1;align-items:center">
+<div class="step anim"><h3>1. Validar</h3><p class="txt">Prueban el MVP y anotamos ajustes</p></div>
+<div class="arrow"><x-icon name="PaperPlane" style="color:#f3a9b1"></x-icon></div>
+<div class="step anim d1"><h3>2. Elegir camino</h3><p class="txt">A o B, con la demo del software</p></div>
+<div class="arrow"><x-icon name="PaperPlane" style="color:#f3a9b1"></x-icon></div>
+<div class="step anim d2"><h3>3. Datos reales</h3><p class="txt">Precios, horario, dirección y WhatsApp</p></div>
+<div class="arrow"><x-icon name="PaperPlane" style="color:#f3a9b1"></x-icon></div>
+<div class="step anim d3"><h3>4. Contrato</h3><p class="txt">Firma y acuerdo de protección de datos</p></div>
+<div class="arrow"><x-icon name="PaperPlane" style="color:#f3a9b1"></x-icon></div>
+<div class="step anim d4"><h3>5. Lanzar</h3><p class="txt">Web, Maxi y portal en producción</p></div>
+</div>
+<div class="foot"><p>Hernán Salas Cerf · BetterCallAlf · WhatsApp +51 979 313 893</p><p>Gracias</p></div>
+
+</section>
+</div>
+<div class="ctl"><button id="prev" aria-label="Anterior">&#8249;</button><span id="num"></span><button id="next" aria-label="Siguiente">&#8250;</button><button id="fs" aria-label="Pantalla completa">&#9974;</button></div>
+<script>
+var P={Globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
+Chat:'<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z"/>',
+Lock:'<rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>',
+PaperPlane:'<path d="M5 12h14M13 6l6 6-6 6"/>',
+Check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+CheckCircle:'<circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/>',
+Search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',
+Verified:'<path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/>',
+Cloud:'<path d="M7 18a5 5 0 0 1-.6-10A6 6 0 0 1 18 9a4.5 4.5 0 0 1-.5 9z"/>',
+Clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+Book:'<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5"/>',
+Key:'<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3"/>',
+Activity:'<path d="M3 12h4l3-8 4 16 3-8h4"/>',
+Trust:'<path d="M12 21s-8-4.5-8-11a5 5 0 0 1 8-4 5 5 0 0 1 8 4c0 6.5-8 11-8 11z"/>',
+Warning:'<path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18h.01"/>'};
+customElements.define('x-icon',class extends HTMLElement{connectedCallback(){this.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+(P[this.getAttribute('name')]||'')+'</svg>'}});
+var S=[].slice.call(document.querySelectorAll('#stage>section')),i=0,st=document.getElementById('stage');
+function fit(){var k=Math.min(innerWidth/1920,innerHeight/1080);st.style.transform='scale('+k+') translate(-50%,-50%)'}
+function show(n){i=Math.max(0,Math.min(S.length-1,n));S.forEach(function(s,j){s.classList.toggle('on',j===i)});document.getElementById('num').textContent=(i+1)+' / '+S.length;history.replaceState(null,'','#'+(i+1))}
+addEventListener('resize',fit);fit();
+document.getElementById('prev').onclick=function(){show(i-1)};document.getElementById('next').onclick=function(){show(i+1)};
+document.getElementById('fs').onclick=function(){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen()};
+addEventListener('keydown',function(e){if(['ArrowRight','PageDown',' '].indexOf(e.key)>=0)show(i+1);if(['ArrowLeft','PageUp'].indexOf(e.key)>=0)show(i-1)});
+st.addEventListener('click',function(e){show(e.clientX>innerWidth/2?i+1:i-1)});
+var x0=null;addEventListener('touchstart',function(e){x0=e.touches[0].clientX},{passive:true});addEventListener('touchend',function(e){if(x0===null)return;var dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>40)show(dx<0?i+1:i-1);x0=null});
+show((parseInt(location.hash.slice(1))||1)-1);
+</script></body></html>
